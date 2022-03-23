@@ -1,5 +1,5 @@
 # clibs
 
-librarys writen by c language
+librarys written by c language
 
 - avl-lib
