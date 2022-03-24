@@ -44,9 +44,6 @@ struct avl_tree {
     size_t  avl_size;
 };
 
-// interface
-extern void* avl_walk(struct avl_tree*, void*, int);
-
 // common define for 32bits or 64bits
 typedef struct avl_node avl_node_t;
 typedef struct avl_tree avl_tree_t;
@@ -66,7 +63,11 @@ typedef uintptr_t       avl_index_t;
 #define AVL_BEFORE (0)
 #define AVL_AFTER (1)
 
-// interface need be impled
+// interface need be implied
+
+// walk to node's AVL_AFTER or AVL_BEFORE
+extern void* avl_walk(avl_tree_t* tree, void* data, int direction);
+
 extern void avl_create(avl_tree_t* tree, int (*compar)(const void*, const void*), size_t size, size_t offset);
 extern void avl_find(avl_tree_t* tree, const void* node, avl_index_t* where);
 extern void avl_insert(avl_tree_t* tree, void* new_data, void* here, int direction);
