@@ -2,9 +2,9 @@
 #define _AVL_H
 
 // headers
-#include <stdtypes.h>  // define boolean_t
 #include <stddef.h>    // define size_t
 #include <stdint.h>    // define uintptr_t
+#include <stdtypes.h>  // define boolean_t
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,7 +19,7 @@ extern "C" {
 #endif
 
 struct avl_node {
-    struct avl_node* avl_child[ 2 ];
+    struct avl_node* avl_child[2];
     struct avl_node* avl_parent;
     unsigned short   avl_child_index;
     short            avl_balance; /* balance -1,0,+1 */
@@ -44,7 +44,6 @@ struct avl_tree {
     size_t  avl_size;
 };
 
-
 // interface
 extern void* avl_walk(struct avl_tree*, void*, int);
 
@@ -53,16 +52,16 @@ typedef struct avl_node avl_node_t;
 typedef struct avl_tree avl_tree_t;
 typedef uintptr_t       avl_index_t;
 
-#define AVL_NODE2DATA(n, o) (( void* )( uintptr_t )(n) - (o))
-#define AVL_DATA2NODE(d, o) (( struct avl_node* )(( uintptr_t )(d) - (o)))
+#define AVL_NODE2DATA(n, o) ((void*)(uintptr_t)(n) - (o))
+#define AVL_DATA2NODE(d, o) ((struct avl_node*)((uintptr_t)(d) - (o)))
 
-#define AVL_INDEX2NODE(x) (( avl_node_t* )((x) & ~1))
-#define AVL_INDEX2CHILD(x) (( x )&1)
-#define AVL_MKINDEX(n, c) (( avl_index_t )(n) | (c))
+#define AVL_INDEX2NODE(x) ((avl_node_t*)((x) & ~1))
+#define AVL_INDEX2CHILD(x) ((x)&1)
+#define AVL_MKINDEX(n, c) ((avl_index_t)(n) | (c))
 
 #define TREE_ISIGN(a) (((a) > 0) - ((a) < 0))
 #define TREE_CMP(a, b) (((a) > (b)) - ((a) < (b)))
-#define TREE_PCMP(a, b) ((( uintptr_t )(a) > ( uintptr_t )(b)) - (( uintptr_t )(a) < ( uintptr_t )(b)))
+#define TREE_PCMP(a, b) (((uintptr_t)(a) > (uintptr_t)(b)) - ((uintptr_t)(a) < (uintptr_t)(b)))
 
 #define AVL_BEFORE (0)
 #define AVL_AFTER (1)

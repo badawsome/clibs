@@ -3,7 +3,6 @@
 //
 
 #include <avl.h>
-#include <stdio.h>
 
 extern void* avl_walk(struct avl_tree*, void*, int);
 

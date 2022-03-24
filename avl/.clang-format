@@ -78,10 +78,10 @@ SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 2
 SpacesInAngles: false
-SpacesInContainerLiterals: true
-SpacesInCStyleCastParentheses: true
+SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
-SpacesInSquareBrackets: true
+SpacesInSquareBrackets: false
 Standard: c++20
 TabWidth: 4
 UseTab: Never
