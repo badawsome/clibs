@@ -50,7 +50,7 @@ typedef struct avl_tree avl_tree_t;
 typedef uintptr_t       avl_index_t;
 
 #define AVL_NODE2DATA(n, o) ((void*)(uintptr_t)(n) - (o))
-#define AVL_DATA2NODE(d, o) ((struct avl_node*)((uintptr_t)(d) - (o)))
+#define AVL_DATA2NODE(d, o) ((struct avl_node*)((uintptr_t)(d) + (o)))
 
 #define AVL_INDEX2NODE(x) ((avl_node_t*)((x) & ~1))
 #define AVL_INDEX2CHILD(x) ((x)&1)

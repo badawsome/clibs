@@ -3,6 +3,7 @@
 //
 
 #include <avl.h>
+#include <dbg.h>
 int main() {
     return 0;
 }

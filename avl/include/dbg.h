@@ -46,21 +46,6 @@ extern int aok;
 /* printf version of libspl_assert */
 extern void libspl_assertf(const char* file, const char* func, int line, const char* format, ...);
 
-int aok = 0;
-
-/* printf version of libspl_assert */
-void libspl_assertf(const char* file, const char* func, int line, const char* format, ...) {
-    va_list args;
-
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    fprintf(stderr, "\n");
-    fprintf(stderr, "ASSERT at %s:%d:%s()", file, line, func);
-    va_end(args);
-    if (aok) { return; }
-    abort();
-}
-
 static inline int libspl_assert(const char* buf, const char* file, const char* func, int line) {
     libspl_assertf(file, func, line, "%s", buf);
     return (0);
