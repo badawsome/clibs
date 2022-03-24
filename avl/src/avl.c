@@ -3,6 +3,7 @@
 //
 
 #include <avl.h>
+#include <dbg.h>
 
 void* avl_walk(avl_tree_t* tree, void* data, int direction) {
     size_t      off  = tree->avl_offset;
@@ -25,7 +26,13 @@ void* avl_walk(avl_tree_t* tree, void* data, int direction) {
     return AVL_NODE2DATA(node, off);
 }
 
-void avl_create(avl_tree_t* tree, int (*compar)(const void*, const void*), size_t size, size_t offset);
+void avl_create(avl_tree_t* tree, int (*avl_order)(const void*, const void*), size_t size, size_t offset) {
+    ASSERT(tree);
+    ASSERT(avl_order);
+    ASSERT(size > 0);
+    ASSERT(size >= offset + sizeof (avl_node_t));
+}
+
 void avl_find(avl_tree_t* tree, const void* node, avl_index_t* where);
 void avl_insert(avl_tree_t* tree, void* new_data, void* here, int direction);
 
