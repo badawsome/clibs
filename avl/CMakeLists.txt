@@ -1,0 +1,1 @@
+add_library(avl SHARED src/avl.c)

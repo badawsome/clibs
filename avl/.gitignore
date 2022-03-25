@@ -1,3 +1,6 @@
 *.o
 avl
 .idea
+
+# test build
+main_test
