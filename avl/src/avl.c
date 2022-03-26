@@ -2,12 +2,8 @@
 // Created by badcw on 2022/3/23.
 //
 
-#ifdef CMAKE
-#include "include/avl.h"
-#else
 #include <avl.h>
 #include <dbg.h>
-#endif
 
 void* avl_walk(avl_tree_t* tree, void* data, int direction) {
     int rev = 1 - direction;
@@ -78,7 +74,6 @@ void* avl_nearest(avl_tree_t* tree, avl_index_t where, int direction) {
     }
     data = AVL_NODE2DATA(node, off);
     if (child != direction) return data;
-
 }
 
 void* avl_add(avl_tree_t* tree, void* node);

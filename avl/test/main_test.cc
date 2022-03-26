@@ -40,8 +40,8 @@
 // Don't forget gtest.h, which declares the testing framework.
 
 #include "gtest/gtest.h"
+#include <avl.h>
 namespace {
-
 TEST(SampleTest, OPT) {
     EXPECT_EQ(1, 1);
 }
