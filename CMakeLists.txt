@@ -4,4 +4,8 @@ project(clibs C CXX)
 set(CMAKE_C_STANDARD 17)
 add_definitions(-DCMAKE)
 
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    add_definitions(-DCLIBS_DEBUG)
+endif()
+
 add_subdirectory(avl)

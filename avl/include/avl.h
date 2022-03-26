@@ -40,7 +40,7 @@ struct avl_tree {
     int (*avl_order)(const void*, const void*);
 
     size_t  avl_offset;
-    ulong_t avl_numnodes;
+    ulong_t avl_num_of_nodes;
     size_t  avl_size;
 };
 
@@ -48,6 +48,16 @@ struct avl_tree {
 typedef struct avl_node avl_node_t;
 typedef struct avl_tree avl_tree_t;
 typedef uintptr_t       avl_index_t;
+
+/*
+ * Node: an AVL node pointer
+ * Data: a struct provides by user
+ * Child: left child or right child
+ * Offset: offset of the node in data
+ * Index: an index to get to give information, represents node with child
+ * Direction: AVL_BEFORE or AVL_AFTER
+ * Order: order function of two data, -1 means less than, 0 means equal, 1 means greater than
+ * */
 
 #define AVL_NODE2DATA(n, o) ((void*)(uintptr_t)(n) - (o))
 #define AVL_DATA2NODE(d, o) ((struct avl_node*)((uintptr_t)(d) + (o)))
@@ -65,33 +75,44 @@ typedef uintptr_t       avl_index_t;
 
 // interface need be implied
 
-// walk to node's AVL_AFTER or AVL_BEFORE
+// walk to data's AVL_AFTER or AVL_BEFORE
 extern void* avl_walk(avl_tree_t* tree, void* data, int direction);
 
 extern void avl_create(avl_tree_t* tree, int (*avl_order)(const void*, const void*), size_t size, size_t offset);
-extern void avl_find(avl_tree_t* tree, const void* node, avl_index_t* where);
-extern void avl_insert(avl_tree_t* tree, void* new_data, void* here, int direction);
+/* find data in avl tree, if not found, value of (where) is the index you should insert the data.
+ *
+ * where: Optional param(push NULL if no need), if you want to get index to insert a data.
+ *
+ * Return:
+ *  1. if return NULL means no found, if where is not NULL where give the index
+ *  2. return not NULL means found, will not change where
+ * */
+extern void* avl_find(avl_tree_t* tree, const void* data, avl_index_t* where);
+extern void  avl_insert(avl_tree_t* tree, void* new_data, avl_index_t where);
+/* OPTIONAL: insert new_data to data node's some direction */
+extern void avl_insert_here(avl_tree_t* tree, void* new_data, void* data, int direction);
 
 extern void* avl_first(avl_tree_t* tree);
 extern void* avl_last(avl_tree_t* tree);
 
-#define AVL_NEXT(tree, node) avl_walk(tree, node, AVL_AFTER)
-#define AVL_PREV(tree, node) avl_walk(tree, node, AVL_BEFORE)
+#define AVL_NEXT(tree, data) avl_walk(tree, data, AVL_AFTER)
+#define AVL_PREV(tree, data) avl_walk(tree, data, AVL_BEFORE)
 
 extern void* avl_nearest(avl_tree_t* tree, avl_index_t where, int direction);
-extern void* avl_add(avl_tree_t* tree, void* node);
-extern void* avl_remove(avl_tree_t* tree, void* node);
+extern void  avl_add(avl_tree_t* tree, void* data);
+extern void  avl_remove(avl_tree_t* tree, void* data);
 
-extern boolean_t avl_update(avl_tree_t* tree, void*);
-extern boolean_t avl_update_lt(avl_tree_t* tree, void*);
-extern boolean_t avl_update_gt(avl_tree_t* tree, void*);
+extern boolean_t avl_update(avl_tree_t* tree, void* data);
+extern boolean_t avl_update_lt(avl_tree_t* tree, void* data);
+extern boolean_t avl_update_gt(avl_tree_t* tree, void* data);
 
 extern void avl_swap(avl_tree_t* tree1, avl_tree_t* tree2);
 
-extern ulong_t   avl_numnodes(avl_tree_t* tree);
+extern ulong_t   avl_num_of_nodes(avl_tree_t* tree);
 extern boolean_t avl_is_empty(avl_tree_t* tree);
 
-extern void* avl_destroy_nodes(avl_tree_t* tree, void** cookie);
+extern void* avl_destroy_nodes(avl_tree_t* tree, void** breakpoint);
+/* do nothing in release, debug mode will check whether the tree is totally deleted */
 extern void  avl_destroy(avl_tree_t* tree);
 
 #ifdef __cplusplus

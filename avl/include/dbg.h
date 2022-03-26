@@ -112,7 +112,7 @@ static inline int libspl_assert(const char* buf, const char* file, const char* f
 #define _CTASSERT(x, y) __CTASSERT(x, y)
 #define __CTASSERT(x, y) typedef char __attribute__((unused)) __compile_time_assertion__##y[(x) ? 1 : -1]
 
-#ifdef NDEBUG
+#ifndef CLIBS_DEBUG
 #define ASSERT3B(x, y, z) ((void)0)
 #define ASSERT3S(x, y, z) ((void)0)
 #define ASSERT3U(x, y, z) ((void)0)
@@ -137,7 +137,7 @@ static inline int libspl_assert(const char* buf, const char* file, const char* f
 #define EQUIV(A, B)                                                                                                    \
     ((void)((!!(A) == !!(B)) || libspl_assert("(" #A ") is equivalent to (" #B ")", __FILE__, __FUNCTION__, __LINE__)))
 
-#endif /* NDEBUG */
+#endif /* CLIBS_DEBUG */
 
 #endif /* _LIBSPL_ASSERT_H */
 
