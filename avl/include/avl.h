@@ -113,7 +113,7 @@ extern boolean_t avl_is_empty(avl_tree_t* tree);
 
 extern void* avl_destroy_nodes(avl_tree_t* tree, void** breakpoint);
 /* do nothing in release, debug mode will check whether the tree is totally deleted */
-extern void  avl_destroy(avl_tree_t* tree);
+extern void avl_destroy(avl_tree_t* tree);
 
 #ifdef __cplusplus
 }

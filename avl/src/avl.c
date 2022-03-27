@@ -8,10 +8,98 @@
 static const int avl_child2balance[2] = {-1, 1};
 static const int avl_balance2child[]  = {0, 0, 1};
 
-/* TODO not public extern */
+/* not public extern
+ * Input:
+ * - balance must be -2 or 2(means need to change to new balance)
+ *
+ * Output:
+ * - return value, means whether balance become low
+ * */
 static int avl_rotation(avl_tree_t* tree, avl_node_t* node, int balance) {
-    ASSERT(0);
-    return 0;
+    ASSERT(tree != NULL);
+    ASSERT(tree->avl_root != NULL);
+    ASSERT(node != NULL);
+    ASSERT(balance == -2 || balance == 2);
+    // transform to do left heavy
+    int left        = balance >= 0;
+    int right       = 1 - left;
+    int left_heavy  = balance >> 1;
+    int right_heavy = -left_heavy;
+
+    avl_node_t* parent = AVL_XPARENT(node);
+    avl_node_t* child  = node->avl_child[left];
+    // child's right child
+    avl_node_t* cright = child->avl_child[right];
+    // child's right child's left
+    avl_node_t* crightleft;
+    // child's right child's right
+    avl_node_t* crightright;
+
+    int which_child   = AVL_XCHILD(node);
+    int child_balance = AVL_XBALANCE(child);
+
+    // LL
+    if (child_balance != right_heavy) {
+        child_balance += right_heavy;
+        node->avl_child[left] = cright;
+        if (cright != NULL) {
+            AVL_SETPARENT(cright, node);
+            AVL_SETCHILD(cright, left);
+        }
+        child->avl_child[right] = node;
+        AVL_SETPARENT(node, child);
+        AVL_SETCHILD(node, right);
+        AVL_SETBALANCE(node, -child_balance);
+
+        AVL_SETBALANCE(child, child_balance);
+        AVL_SETCHILD(child, which_child);
+        AVL_SETPARENT(child, parent);
+
+        if (parent != NULL)
+            parent->avl_child[left] = child;
+        else
+            tree->avl_root = child;
+        return child_balance == 0;
+    }
+
+    // LR
+    ASSERT(cright != NULL);
+    crightleft  = cright->avl_child[left];
+    crightright = cright->avl_child[right];
+
+    node->avl_child[left] = crightright;
+    if (crightright != NULL) {
+        AVL_SETPARENT(crightright, node);
+        AVL_SETCHILD(crightright, left);
+    }
+
+    child->avl_child[right] = crightleft;
+    if (crightleft != NULL) {
+        AVL_SETPARENT(crightleft, child);
+        AVL_SETCHILD(crightleft, right);
+    }
+
+    balance                 = AVL_XBALANCE(cright);
+    cright->avl_child[left] = child;
+    AVL_SETPARENT(child, cright);
+    AVL_SETBALANCE(child, balance == right_heavy ? left_heavy : 0);
+    ASSERT(AVL_XCHILD(child) == left);
+
+    cright->avl_child[right] = node;
+    AVL_SETPARENT(node, cright);
+    AVL_SETBALANCE(node, balance == left_heavy ? right_heavy : 0);
+    AVL_SETCHILD(node, right);
+
+    if (parent != NULL) {
+        parent->avl_child[which_child] = cright;
+    } else {
+        tree->avl_root = cright;
+    }
+    AVL_SETPARENT(cright, parent);
+    AVL_SETCHILD(cright, which_child);
+    AVL_SETBALANCE(cright, 0);
+
+    return 1;
 }
 
 void* avl_walk(avl_tree_t* tree, void* data, int direction) {
@@ -107,7 +195,13 @@ void avl_insert(avl_tree_t* tree, void* new_data, avl_index_t where) {
             // no need to rebalance
             return;
         }
-        if (old_balance != 0) break;
+        if (old_balance != 0) {
+            /*
+             * only when old_balance and new_balance not equal to zero
+             * and delta is 1, so new_balance must be -2 or 2
+             * */
+            break;
+        }
         // old balance is zero, new balance's absolute value not greater than 1, no need rebalance
         AVL_SETBALANCE(node, new_balance);
         parent      = AVL_XPARENT(node);
@@ -181,7 +275,75 @@ void avl_add(avl_tree_t* tree, void* data) {
 #endif /* CLIBS_DEBUG */
     avl_insert(tree, data, 0);
 }
-void avl_remove(avl_tree_t* tree, void* data);
+void avl_remove(avl_tree_t* tree, void* data) {
+    avl_node_t* delete;
+    avl_node_t* parent;
+    avl_node_t* node;
+    avl_node_t  tmp;
+
+    int    old_balance;
+    int    new_balance;
+    int    left;
+    int    right;
+    int    which_child;
+    size_t off = tree->avl_offset;
+
+    delete = AVL_DATA2NODE(data, off);
+    if (delete->avl_child[0] != NULL && delete->avl_child[1] != NULL) {
+        old_balance = AVL_XBALANCE(delete);
+        left        = avl_balance2child[old_balance + 1];
+        right       = 1 - left;
+
+        for (node = delete->avl_child[left]; node->avl_child[right] != NULL; node = node->avl_child[right])
+            ;
+        tmp = *node;
+
+        *node = *delete;
+        if (node->avl_child[left] == node) { node->avl_child[left] = &tmp; }
+        parent = AVL_XPARENT(node);
+        if (parent != NULL)
+            parent->avl_child[AVL_XCHILD(node)] = node;
+        else
+            tree->avl_root = node;
+        AVL_SETPARENT(node->avl_child[0], node);
+        AVL_SETPARENT(node->avl_child[1], node);
+        delete                                = &tmp;
+        parent                                = AVL_XPARENT(delete);
+        parent->avl_child[AVL_XCHILD(delete)] = delete;
+        which_child                           = (delete->avl_child[1] != 0);
+        if (delete->avl_child[which_child] != NULL) { AVL_SETPARENT(delete->avl_child[which_child], delete); }
+    }
+    ASSERT(tree->avl_num_of_nodes > 0);
+    --tree->avl_num_of_nodes;
+    parent      = AVL_XPARENT(delete);
+    which_child = AVL_XCHILD(delete);
+    node        = delete->avl_child[delete->avl_child[0] == NULL];
+    if (node != NULL) {
+        AVL_SETPARENT(node, parent);
+        AVL_SETCHILD(node, which_child);
+    }
+    if (parent == NULL) {
+        tree->avl_root = node;
+        return;
+    }
+    parent->avl_child[which_child] = node;
+
+    do {
+        node        = parent;
+        old_balance = AVL_XBALANCE(node);
+        new_balance = old_balance - avl_child2balance[which_child];
+        parent      = AVL_XPARENT(node);
+        which_child = AVL_XCHILD(node);
+        if (old_balance == 0) {
+            AVL_SETBALANCE(node, new_balance);
+            break;
+        }
+        if (new_balance == 0)
+            AVL_SETBALANCE(node, new_balance);
+        else if (!avl_rotation(tree, node, new_balance))
+            break;
+    } while (parent != NULL);
+}
 
 #define AVL_REINSERT(tree, node)                                                                                       \
     avl_remove(tree, node);                                                                                            \
@@ -323,7 +485,7 @@ done:
     return AVL_NODE2DATA(node, off);
 }
 
-/* ARGSUSED */
+/* ARGS-USED */
 void avl_destroy(avl_tree_t* tree) {
     ASSERT(tree);
     ASSERT(tree->avl_num_of_nodes == 0);
