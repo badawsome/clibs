@@ -142,7 +142,7 @@ void avl_create(avl_tree_t* tree, int (*order)(const void*, const void*), size_t
 
 void* avl_find(avl_tree_t* tree, const void* data, avl_index_t* where) {
     avl_node_t* node;
-    avl_node_t* prev;
+    avl_node_t* prev = NULL;
 
     int child = 0;
     int diff;
