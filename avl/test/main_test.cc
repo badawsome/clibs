@@ -13,7 +13,9 @@ struct map_node {
 int map_order(const void* node1, const void* node2) {
     auto n1 = (map_node*)node1;
     auto n2 = (map_node*)node2;
-    return n1->key.compare(n2->key);
+    int compare = n1->key.compare(n2->key);
+    if (compare == 0) return 0;
+    return compare > 0 ? 1 : -1;
 }
 
 map new_map() {
@@ -22,7 +24,7 @@ map new_map() {
     return map_t;
 }
 
-void set(map map_t, const std::string& key, const int& value) {
+void set(map& map_t, const std::string& key, const int& value) {
     avl_index_t idx = 0;
 
     map_node mn{.key = key};
@@ -33,9 +35,10 @@ void set(map map_t, const std::string& key, const int& value) {
     avl_insert(&map_t, node, idx);
 }
 
-int get(map map_t, const std::string& key) {
+int get(map& map_t, const std::string& key) {
     map_node mn{.key = key};
-    auto*    node = static_cast<map_node*>(avl_find(&map_t, &mn, nullptr));
+
+    auto* node = static_cast<map_node*>(avl_find(&map_t, &mn, nullptr));
     if (node != nullptr) { return node->value; }
     return 0;
 }
