@@ -485,8 +485,7 @@ done:
     return AVL_NODE2DATA(node, off);
 }
 
-/* ARGS-USED */
-void avl_destroy(avl_tree_t* tree) {
+void avl_destroy(__attribute__((unused))avl_tree_t* tree) {
     ASSERT(tree);
     ASSERT(tree->avl_num_of_nodes == 0);
     ASSERT(tree->avl_root == NULL);

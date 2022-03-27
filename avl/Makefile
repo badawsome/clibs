@@ -1,4 +1,4 @@
-TARGET = avl
+TARGET = avl.a
 
 PWD = $(shell pwd)
 SRCS  = $(shell find $(PWD)/src -type f -name *.c)
@@ -18,11 +18,11 @@ dbg.o:
 avl.o:
 	$(CC) $(CFLAGS) -o $(PWD)/src/$@ -c $(PWD)/src/avl.c
 $(TARGET): $(OBJS) $(HEADERS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS)
+	$(AR) $(ARFLAGS) $@ $^
 
 .PHONY: all test clean
 
-test:
+test: $(TARGET)
 	$(MAKE) -C test test
 
 all: $(TARGET)

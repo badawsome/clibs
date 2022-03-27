@@ -31,7 +31,7 @@ gtest_main.a: gtest-all.o gtest_main.o
 
 #$(TEST_TARGET).o: $(TEST_SRCS) $(GTEST_HEADERS)
 #	cd test && $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/$(TEST_TARGET).cc -o $@
-$(TEST_TARGET): $(TEST_OBJS) gtest_main.a
+$(TEST_TARGET): $(TEST_OBJS) gtest_main.a $(PWD)/../avl.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 test: $(TEST_TARGET)
