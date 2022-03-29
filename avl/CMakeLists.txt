@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.21)
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -26,3 +27,6 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_executable(main_test test/main_test.cc)
 target_link_libraries(main_test gtest_main avl)
+
+include(GoogleTest)
+gtest_discover_tests(main_test DISCOVERY_MODE)
