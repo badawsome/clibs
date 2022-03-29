@@ -8,6 +8,18 @@
 static const int avl_child2balance[2] = {-1, 1};
 static const int avl_balance2child[]  = {0, 0, 1};
 
+//static void dfs(avl_node_t * rt, size_t offset, int vl, int sx) {
+//	void *node = AVL_NODE2DATA(rt, offset);
+//    int val = *(int*)node;
+//    if (sx == 1) {
+//        ASSERT(vl > val);
+//    } else {
+//        ASSERT(vl < val);
+//    }
+//    if (rt->avl_child[0]) dfs(rt->avl_child[0], offset, val, -1);
+//    if (rt->avl_child[1]) dfs(rt->avl_child[1], offset, val, 1);
+//}
+
 /* not public extern
  * Input:
  * - balance must be -2 or 2(means need to change to new balance)
@@ -56,13 +68,14 @@ static int avl_rotation(avl_tree_t* tree, avl_node_t* node, int balance) {
         AVL_SETPARENT(child, parent);
 
         if (parent != NULL)
-            parent->avl_child[left] = child;
+            parent->avl_child[which_child] = child;
         else
             tree->avl_root = child;
         return child_balance == 0;
     }
 
     // LR
+//    if (cright == NULL) { dfs(tree->avl_root, tree->avl_offset, 0, 0); }
     ASSERT(cright != NULL);
     crightleft  = cright->avl_child[left];
     crightright = cright->avl_child[right];
@@ -485,7 +498,7 @@ done:
     return AVL_NODE2DATA(node, off);
 }
 
-void avl_destroy(__attribute__((unused))avl_tree_t* tree) {
+void avl_destroy(__attribute__((unused)) avl_tree_t* tree) {
     ASSERT(tree);
     ASSERT(tree->avl_num_of_nodes == 0);
     ASSERT(tree->avl_root == NULL);
