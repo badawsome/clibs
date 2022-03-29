@@ -1,0 +1,22 @@
+name: CMake CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: clone submodule
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build
+        run: cd avl && make
+      - name: Run tests
+        run: cd avl && make test
