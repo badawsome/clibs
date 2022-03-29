@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 project(clibs C CXX)
 
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 17)
 add_definitions(-DCMAKE)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -13,7 +14,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif()
 
 # libs
-set(libs avl)
+set(libs avl data_gen)
 foreach(lib IN LISTS libs)
     add_subdirectory(${lib})
 endforeach()
@@ -21,7 +22,7 @@ endforeach()
 ## gtest
 add_subdirectory(tests/googletest)
 enable_testing()
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} tests/include)
 include(GoogleTest)
 
 # tests
