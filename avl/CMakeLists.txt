@@ -11,10 +11,7 @@ endif()
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-project(avl LANGUAGES C CXX VERSION 0.1.0)
+project(avl LANGUAGES C VERSION 0.1.0)
 
 include_directories(include)
 add_library(avl src/avl.c src/dbg.c)
