@@ -1,9 +1,8 @@
 all:
 	$(MAKE) -C avl all
 
-test:
-	$(MAKE) -C avl test
+test: all
+	$(MAKE) -C tests test
 
 clean:
-	$(MAKE) -C avl clean
-
+	$(MAKE) -C avl clean && $(MAKE) -C tests clean

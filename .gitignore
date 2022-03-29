@@ -51,4 +51,11 @@ Module.symvers
 Mkfile.old
 dkms.conf
 .idea/
+
+# build files
 build/
+
+# temp files
+*.tmp
+avl_tests
+main_test

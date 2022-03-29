@@ -8,17 +8,28 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - { name: "Windows MSVC", os: windows-latest, cc: "cl", cxx: "cl" }
+          - { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
+          - { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
 
     steps:
-      - uses: actions/checkout@v3
-      - name: clone submodule
+      - name: Clone submodule
         uses: actions/checkout@v3
         with:
           submodules: recursive
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.10.0
       - name: Build Debug
-        run: cmake -B build/debug -G Ninja
+        run: cmake -B build/debug -DCMAKE_BUILD_TYPE=Debug -G Ninja
       - name: Build Release
-        run: cmake -B build/debug -G Ninja
+        run: cmake -B build/release -DCMAKE_BUILD_TYPE=Release -G Ninja
       - name: Run tests
-        run: build/debug/avl/main_test
+        run:
+          cmake --build build/debug
+          ninja test -C build/debug

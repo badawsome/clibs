@@ -1,3 +1,6 @@
 [submodule "avl/test/googletest"]
 	path = avl/test/googletest
 	url = https://github.com/google/googletest.git
+[submodule "tests/googletest"]
+	path = tests/googletest
+	url = https://github.com/google/googletest.git

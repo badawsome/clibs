@@ -7,8 +7,8 @@ INCLUDE = $(PWD)/include
 
 OBJS = $(SRCS:.c=.o)
 
-CC = clang
-CXX = clang++
+#CC = clang
+#CXX = clang++
 CFLAGS = -O2 -g -Wall -Wextra -pthread -I $(INCLUDE)
 CPPFLAGS = -isystem $(GTEST_DIR)/include -I $(INCLUDE)
 CXXFLAGS = -std=c++17 -g -Wall -Wextra -pthread -I $(INCLUDE)
@@ -20,12 +20,9 @@ avl.o:
 $(TARGET): $(OBJS) $(HEADERS)
 	$(AR) $(ARFLAGS) $@ $^
 
-.PHONY: all test clean
-
-test: $(TARGET)
-	$(MAKE) -C test test
+.PHONY: all clean
 
 all: $(TARGET)
 
 clean:
-	$(RM) $(OBJS) $(PWD)/$(TARGET) && $(MAKE) -C test clean
+	$(RM) $(OBJS) $(PWD)/$(TARGET)

@@ -4,15 +4,19 @@ TEST_TARGET = main_test
 PWD = $(shell pwd)
 TEST_DIR = $(PWD)
 TEST_SRCS = $(shell find $(PWD) -type f -depth 1 -name *.cc)
-INCLUDE = $(PWD)/../include
+LIBS = avl
 
-TEST_OBJS = $(TEST_SRCS:.cc=.o)
+LIBS_INCLUDE = $(addsuffix /include, $(addprefix $(PWD)/../, $(LIBS)))
+LIBS_INCLUDE_ARGS = $(addprefix -I, $(LIBS_INCLUDE))
+LINK_LIBS = $(addsuffix .a, $(join $(addsuffix /,$(addprefix $(PWD)/../, $(LIBS))), $(LIBS)))
+TESTS_SOURCES = $(wildcard *.cc)
+TEST_OBJS = $(addprefix $(PWD)/,$(TESTS_SOURCES:.cc=.o))
 
-CC = clang
-CXX = clang++
-CFLAGS = -O2 -g -Wall -Wextra -pthread -I $(INCLUDE)
-CPPFLAGS = -isystem $(GTEST_DIR)/include -I $(INCLUDE)
-CXXFLAGS = -std=c++17 -g -Wall -Wextra -pthread -I $(INCLUDE)
+#CC = clang
+#CXX = clang++
+CFLAGS = -O2 -g -Wall -Wextra -pthread $(LIBS_INCLUDE_ARGS)
+CPPFLAGS = -isystem $(GTEST_DIR)/include $(LIBS_INCLUDE_ARGS)
+CXXFLAGS = -std=c++17 -g -Wall -Wextra -pthread $(LIBS_INCLUDE_ARGS)
 
 GTEST_DIR = $(TEST_DIR)/googletest/googletest
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
@@ -29,13 +33,11 @@ gtest.a : gtest-all.o
 gtest_main.a: gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-#$(TEST_TARGET).o: $(TEST_SRCS) $(GTEST_HEADERS)
-#	cd test && $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/$(TEST_TARGET).cc -o $@
-$(TEST_TARGET): $(TEST_OBJS) gtest_main.a $(PWD)/../avl.a
+$(TEST_TARGET): $(TEST_OBJS) gtest_main.a $(LINK_LIBS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 clean:
-	$(RM) $(TEST_DIR)/$(TEST_TARGET) $(TEST_DIR)/$(TEST_TARGET).o \
+	$(RM) $(TEST_DIR)/$(TEST_TARGET) $(TEST_DIR)/$(TEST_TARGET).o $(TEST_OBJS) \
 	$(TEST_DIR)/gtest-all.o $(TEST_DIR)/gtest_main.a $(TEST_DIR)/gtest_main.o

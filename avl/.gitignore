@@ -1,6 +1,0 @@
-*.o
-avl
-.idea
-
-# tests build
-main_test
