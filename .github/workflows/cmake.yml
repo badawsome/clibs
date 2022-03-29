@@ -30,6 +30,6 @@ jobs:
       - name: Build Release
         run: cmake -B build/release -DCMAKE_BUILD_TYPE=Release -G Ninja
       - name: Run tests
-        run:
+        run: |
           cmake --build build/debug
           ninja test -C build/debug
