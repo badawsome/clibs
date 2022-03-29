@@ -25,10 +25,18 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include(GoogleTest)
 
 # tests
-#add_executable(avl_tests tests/avl_tests.cc)
-#target_link_libraries(avl_tests gtest_main avl)
 file(GLOB tests_sources CONFIGURE_DEPENDS tests/*.cc)
-add_executable(main_tests ${tests_sources})
-target_link_libraries(main_tests gtest_main ${libs})
-target_include_directories(main_tests PRIVATE tests)
-gtest_discover_tests(main_tests)
+add_executable(main_test ${tests_sources})
+target_link_libraries(main_test gtest_main ${libs})
+target_include_directories(main_test PRIVATE tests)
+gtest_discover_tests(main_test)
+
+## TODO benchmark
+#include(FetchContent)
+#FetchContent_Declare(googlebenchmark
+#        GIT_REPOSITORY https://github.com/google/benchmark
+#        )
+#FetchContent_MakeAvailable(googlebenchmark)
+#file(GLOB bench_sources CONFIGURE_DEPENDS benchmark/*.cc)
+#add_executable(main_bench ${bench_sources})
+#target_link_libraries(main_bench benchmark::benchmark ${libs})

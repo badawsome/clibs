@@ -14,7 +14,7 @@ jobs:
         config:
           # Will not support makefile build in windows
           # - { name: "Windows MSVC", os: windows-latest, cc: "cl", cxx: "cl" }
-          - { name: "Ubuntu gcc 64", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
+          - { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
           - { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
 
     steps:

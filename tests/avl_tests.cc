@@ -43,6 +43,12 @@ int get(map& map_t, const std::string& key) {
     return 0;
 }
 
+void remove(map& map_t, const std::string& key) {
+    map_node mn{.key = key};
+
+    avl_remove(&map_t, &mn);
+}
+
 }  // namespace test_map
 
 TEST(AVL, UseAVLAsMap) {
@@ -52,4 +58,6 @@ TEST(AVL, UseAVLAsMap) {
     EXPECT_EQ(test_map::get(mp, "I"), 1);
     EXPECT_EQ(test_map::get(mp, "you"), 2);
     EXPECT_EQ(test_map::get(mp, "not exist"), 0);
+    test_map::remove(mp, "I");
+    EXPECT_EQ(test_map::get(mp, "I"), 0);
 }
