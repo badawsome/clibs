@@ -6,7 +6,7 @@ TEST_DIR = $(PWD)
 TEST_SRCS = $(shell find $(PWD) -type f -depth 1 -name *.cc)
 LIBS = avl
 
-LIBS_INCLUDE = $(addsuffix /include, $(addprefix $(PWD)/../, $(LIBS)))
+LIBS_INCLUDE = $(addsuffix /include, $(addprefix $(PWD)/../, $(LIBS))) $(PWD)/include
 LIBS_INCLUDE_ARGS = $(addprefix -I, $(LIBS_INCLUDE))
 LINK_LIBS = $(addsuffix .a, $(join $(addsuffix /,$(addprefix $(PWD)/../, $(LIBS))), $(LIBS)))
 TESTS_SOURCES = $(wildcard *.cc)
