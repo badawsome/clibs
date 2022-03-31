@@ -3,7 +3,7 @@
 //
 
 #include <avl.h>
-#include <dbg.h>
+#include "../../commons/include/dbg.h"
 
 static const int avl_child2balance[2] = {-1, 1};
 static const int avl_balance2child[]  = {0, 0, 1};

@@ -4,7 +4,8 @@ TEST_TARGET = main_test
 PWD = $(shell pwd)
 TEST_DIR = $(PWD)
 TEST_SRCS = $(shell find $(PWD) -type f -depth 1 -name *.cc)
-LIBS = avl data_gen
+# define by father dir
+#LIBS = avl commons
 
 LIBS_INCLUDE = $(addsuffix /include, $(addprefix $(PWD)/../, $(LIBS))) $(PWD)/include
 LIBS_INCLUDE_ARGS = $(addprefix -I, $(LIBS_INCLUDE))

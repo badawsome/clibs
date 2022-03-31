@@ -13,6 +13,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 project(avl LANGUAGES C VERSION 0.1.0)
 
-include_directories(include)
-add_library(avl src/avl.c src/dbg.c)
+include_directories(include ../commons/include)
+add_library(avl src/avl.c)
 target_include_directories(avl PUBLIC include PRIVATE src)

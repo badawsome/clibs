@@ -1,8 +1,14 @@
+export LIBS = commons avl
+
 all:
-	$(MAKE) -C avl all && $(MAKE) -C data_gen all
+	@for lib in ${LIBS} ; do \
+		$(MAKE) -C $${lib} all; \
+	done
 
 test: all
 	$(MAKE) -C tests test
 
 clean:
-	$(MAKE) -C avl clean && $(MAKE) -C tests clean
+	@for lib in ${LIBS} ; do \
+    	$(MAKE) -C $${lib} clean; \
+    done && $(MAKE) -C tests clean

@@ -14,7 +14,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif()
 
 # libs
-set(libs avl data_gen)
+set(libs avl commons)
 foreach(lib IN LISTS libs)
     add_subdirectory(${lib})
 endforeach()
