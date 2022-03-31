@@ -23,6 +23,6 @@ jobs:
         with:
           submodules: recursive
       - name: Build
-        run: make
+        run: make all
       - name: Run tests
         run: make test
