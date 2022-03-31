@@ -25,11 +25,14 @@ jobs:
         uses: ashutoshvarma/setup-ninja@master
         with:
           version: 1.10.0
-      - name: Build Debug
-        run: cmake -B build/debug -DCMAKE_BUILD_TYPE=Debug -G Ninja
-      - name: Build Release
-        run: cmake -B build/release -DCMAKE_BUILD_TYPE=Release -G Ninja
       - name: Run tests
-        run: |
-          cmake --build build/debug
-          ninja test -C build/debug
+        run:
+          bash ./run_test.sh
+#      - name: Build Debug
+#        run: cmake -B build/debug -DCMAKE_BUILD_TYPE=Debug -G Ninja
+#      - name: Build Release
+#        run: cmake -B build/release -DCMAKE_BUILD_TYPE=Release -G Ninja
+#      - name: Run tests
+#        run: |
+#          cmake --build build/debug
+#          ninja test -C build/debug
